@@ -9,6 +9,14 @@ import numeral from 'numeral'
 import 'bulma/css/bulma.css'
 import './index.css';
 
+function partialSum(arr) {
+  return arr.reduce((r, a) => {
+    r.push(((r.length && r[r.length - 1]) || 0) + a);
+    return r;
+   }, []
+  );
+}
+
 
 function salary(years, starting, raise) {
   let arr = Array(years).fill(starting);
@@ -18,12 +26,7 @@ function salary(years, starting, raise) {
     arr[i] = arr[i-1] * (1 + raise/100);
   }
 
-  // Compute the partial sum of the income per year
-  return arr.reduce((r, a) => {
-    r.push(((r.length && r[r.length - 1]) || 0) + a);
-    return r;
-   }, []
-  );
+  return arr
 }
 
 class SalaryChart extends React.Component {
@@ -69,7 +72,7 @@ class SalaryChart extends React.Component {
     };
 
     return (
-        <Line data={data} options={options} />
+      <Line data={data} options={options} />
     );
   }
 }
@@ -94,7 +97,7 @@ class About extends React.Component {
                   <li>Prepare for a career in academia</li>
                 </ul>
                 <p>
-                  However, getting rich is not among the reasons to obtain a doctorate.
+                  However, maximizing income is not among the reasons to obtain a doctorate.
                 </p>
                 <hr />
                 <p>
@@ -111,14 +114,123 @@ class About extends React.Component {
   }
 }
 
+class DuringDegree extends React.Component {
+  render() {
+    const years = this.props.numYears
+    const lostIncome = numeral(this.props.swe[years-1] - this.props.phd[years-1]).format('$0,0')
+
+    const stipend = numeral(this.props.stipend).format('($0a)');
+    const starting = numeral(this.props.startingCompensation).format('($0a)');
+
+    return (
+      <div>
+          <h2 id="lost-income">{lostIncome} lost</h2>
+          <p>Nobody goes into a computer science PhD program for the money. But it's often understated just how much you're giving up by pursuing a PhD instead of following the traditional software engineering route.</p>
+
+          <hr />
+
+          <nav className="level">
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">Doctorate</p>
+              </div>
+            </div>
+          </nav>
+
+          <div className="columns">
+            <div className="column is-4 slider-label"><p>{years} years</p></div>
+            <div className="column"><Slider min={4} max={10} defaultValue={years} onChange={(value) => this.props.updateNumYears(value)} /></div>
+          </div>
+
+          <div className="columns">
+            <div className="column is-4 slider-label"><p>{stipend} stipend</p></div>
+            <div className="column"><Slider min={20000} max={35000} defaultValue={this.props.stipend} step={1000} onChange={(value) => this.props.updateStipend(value)} /></div>
+          </div>
+
+          <hr />
+
+
+          <nav className="level">
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">Software Engineer</p>
+              </div>
+            </div>
+          </nav>
+
+          <div className="columns">
+            <div className="column is-4 slider-label"><p>{starting} starting</p></div>
+            <div className="column"><Slider min={70000} max={250000} defaultValue={this.props.startingCompensation} step={2000} onChange={(value) => this.props.updateStarting(value)} /></div>
+          </div>
+
+          <div className="columns">
+            <div className="column is-4 slider-label"><p>{this.props.raise}% yearly raise </p></div>
+            <div className="column"><Slider min={0} max={5} defaultValue={this.props.raise} step={1} onChange={(value) => this.props.updateRaise(value)} /></div>
+          </div>
+
+
+
+      </div>
+    );
+  }
+}
+
+
+
+class AfterDegree extends React.Component {
+  render() {
+    const years = this.props.numYears + this.props.numPostDocYears
+    const lostIncome = numeral(this.props.swe[years-1] - this.props.phd[years-1]).format('$0,0')
+
+    const starting = numeral(this.props.postDocStartingCompensation).format('($0a)');
+
+    return (
+      <div>
+          <h2 id="lost-income">{lostIncome} lost</h2>
+          <p>Even after earning a doctorate, it is unlikely to catch up to the alternate version of you that did not pursue a PhD.</p>
+
+          <hr />
+
+          <nav className="level">
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">After Degree</p>
+              </div>
+            </div>
+          </nav>
+
+          <div className="columns">
+            <div className="column is-4 slider-label"><p>{this.props.numPostDocYears} years</p></div>
+            <div className="column"><Slider min={10} max={40} defaultValue={this.props.numPostDocYears} onChange={(value) => this.props.updateNumPostDocYears(value)} /></div>
+          </div>
+
+          <div className="columns">
+          <div className="column is-4 slider-label"><p>{starting} starting</p></div>
+            <div className="column"><Slider min={70000} max={300000} defaultValue={this.props.postDocStartingCompensation} step={2000} onChange={(value) => this.props.updatePostDocStarting(value)} /></div>
+          </div>
+
+          <div className="columns">
+            <div className="column is-4 slider-label"><p>{this.props.postDocRaise}% yearly raise </p></div>
+            <div className="column"><Slider min={0} max={5} defaultValue={this.props.postDocRaise} step={1} onChange={(value) => this.props.updatePostDocRaise(value)} /></div>
+          </div>
+
+      </div>
+    );
+  }
+}
+
 class PhD extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      duringDegree: true,
       numYears: 6,
       stipend: 24000,
       startingCompensation: 100000,
-      raise: 3 
+      raise: 3,
+      postDocStartingCompensation: 120000,
+      numPostDocYears: 30,
+      postDocRaise: 3
     };
   }
 
@@ -127,6 +239,13 @@ class PhD extends React.Component {
       return {numYears: years}
     });
   }
+
+  updateNumPostDocYears(years) {
+    this.setState((prevState, props) => {
+      return {numPostDocYears: years}
+    });
+  }
+
 
   updateStipend(stipend) {
     this.setState((prevState, props) => {
@@ -140,22 +259,78 @@ class PhD extends React.Component {
     });
   }
 
+
+  updatePostDocStarting(starting) {
+    this.setState((prevState, props) => {
+      return {postDocStartingCompensation: starting}
+    });
+  }
+
   updateRaise(raise) {
     this.setState((prevState, props) => {
       return {raise: raise}
     });
   }
 
+
+  updatePostDocRaise(raise) {
+    this.setState((prevState, props) => {
+      return {postDocRaise: raise}
+    });
+  }
+
+  toggleBeforeAfter() {
+    this.setState((prevState, props) => {
+      return {duringDegree: !prevState.duringDegree}
+    });  
+  }
+
   render() {
-    const years = this.state.numYears
-    const phd = salary(years, this.state.stipend, 2)
-    const swe = salary(years, this.state.startingCompensation, this.state.raise)
 
-  
-    const lostIncome = numeral(swe[years-1] - phd[years-1]).format('$0,0')
+    let phd = []
+    let swe = []
 
-    const stipend = numeral(this.state.stipend).format('($0a)');
-    const starting = numeral(this.state.startingCompensation).format('($0a)');
+    if (this.state.duringDegree) {
+      const years = this.state.numYears
+      phd = partialSum(salary(years, this.state.stipend, 2))
+      swe = partialSum(salary(years, this.state.startingCompensation, this.state.raise))
+    } else {
+      swe = partialSum(
+        salary(this.state.numYears + this.state.numPostDocYears, this.state.startingCompensation, this.state.raise)
+      )
+
+      const duringDegreeSalary = salary(this.state.numYears, this.state.stipend, 2)
+      const afterDegreeSalary = salary(this.state.numPostDocYears, this.state.postDocStartingCompensation, this.state.postDocRaise)
+      phd = partialSum(duringDegreeSalary.concat(afterDegreeSalary))
+    }
+
+    const Sliders = this.state.duringDegree ? 
+      <DuringDegree
+        numYears={this.state.numYears}
+        stipend={this.state.stipend}
+        startingCompensation={this.state.startingCompensation}
+        raise={this.state.raise}
+        updateNumYears={this.updateNumYears.bind(this)}
+        updateStipend={this.updateStipend.bind(this)}
+        updateStarting={this.updateStarting.bind(this)}
+        updateRaise={this.updateRaise.bind(this)}
+        phd={phd}
+        swe={swe}
+    /> :
+      <AfterDegree
+        numYears={this.state.numYears}
+        numPostDocYears={this.state.numPostDocYears}
+        postDocStartingCompensation={this.state.postDocStartingCompensation}
+        postDocRaise={this.state.postDocRaise}
+        updateNumPostDocYears={this.updateNumPostDocYears.bind(this)}
+        updatePostDocStarting={this.updatePostDocStarting.bind(this)}
+        updatePostDocRaise={this.updatePostDocRaise.bind(this)}
+        phd={phd}
+        swe={swe}
+      />
+
+    const beforeAfter = this.state.duringDegree ? "After" : "Before";
+
 
     return (
     <div>
@@ -163,63 +338,26 @@ class PhD extends React.Component {
         <div className="hero-body">
         <div className="container">
           <div className="columns">
+
             <div className="column is-4 box">
               <div className="content">
-                <h2 id="lost-income">{lostIncome} lost</h2>
-                <p>Nobody goes into a computer science PhD program for the money. But it's often understated just how much you're giving up by pursuing a PhD instead of following the traditional software engineering route.</p>
-
+                {Sliders}
                 <hr />
 
-                <nav className="level">
-                  <div className="level-item has-text-centered">
-                    <div>
-                      <p className="heading">Doctorate</p>
-                    </div>
-                  </div>
-                </nav>
-
-                <div className="columns">
-                  <div className="column is-4 slider-label"><p>{this.state.numYears} years</p></div>
-                  <div className="column"><Slider min={4} max={10} defaultValue={this.state.numYears} onChange={(value) => this.updateNumYears(value)} /></div>
-                </div>
-
-                <div className="columns">
-                  <div className="column is-4 slider-label"><p>{stipend} stipend</p></div>
-                  <div className="column"><Slider min={20000} max={35000} defaultValue={this.state.stipend} step={1000} onChange={(value) => this.updateStipend(value)} /></div>
-                </div>
-
-                <hr />
-
-
-                <nav className="level">
-                  <div className="level-item has-text-centered">
-                    <div>
-                      <p className="heading">Software Engineer</p>
-                    </div>
-                  </div>
-                </nav>
-
-                <div className="columns">
-                  <div className="column is-4 slider-label"><p>{starting} starting</p></div>
-                  <div className="column"><Slider min={70000} max={250000} defaultValue={this.state.startingCompensation} step={2000} onChange={(value) => this.updateStarting(value)} /></div>
-                </div>
-
-                <div className="columns">
-                  <div className="column is-4 slider-label"><p>{this.state.raise}% yearly raise </p></div>
-                  <div className="column"><Slider min={0} max={5} defaultValue={this.state.raise} step={1} onChange={(value) => this.updateRaise(value)} /></div>
-                </div>
-
-                <hr />
                 <div className="has-text-centered">
-                  <a className="button is-success">After Graduation</a>
+                  <a className="button is-success"
+                    onClick={this.toggleBeforeAfter.bind(this)}>
+                    {beforeAfter} Graduation
+                  </a>
                 </div>
 
+              </div>
             </div>
-          </div>
 
             <div id="salary-chart" className="column">
               <SalaryChart swe={swe} phd={phd} />
             </div>
+
           </div>
         </div>
 
