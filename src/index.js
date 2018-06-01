@@ -80,7 +80,20 @@ class SalaryChart extends React.Component {
                     }
                 }
             ]
-        }
+        },
+        tooltips: {
+          callbacks: {
+              label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                  if (label) {
+                      label += ': ';
+                  }
+                  label += numeral(tooltipItem.yLabel).format('$0,0');
+                  return label;
+              }
+          }
+      }
     };
 
     return (
