@@ -4,6 +4,7 @@ import {Line} from 'react-chartjs-2';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import numeral from 'numeral'
+import { HashRouter, Route, Switch, NavLink } from 'react-router-dom'
 
 
 import 'bulma/css/bulma.css'
@@ -16,7 +17,6 @@ function partialSum(arr) {
    }, []
   );
 }
-
 
 function salary(years, starting, raise) {
   let arr = Array(years).fill(starting);
@@ -384,46 +384,23 @@ class PhD extends React.Component {
 }
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      page: "PAGE_HOME"
-    };
-  }
-
-  navigateHome() {
-    this.setState((prevState, props) => {
-      return {page: "PAGE_HOME"}
-    });
-  }
-
-  navigateAbout() {
-    this.setState((prevState, props) => {
-      return {page: "PAGE_ABOUT"}
-    });
-  }
-
   render() {
-    let page;
-    if (this.state.page === "PAGE_HOME") {
-      page = <PhD />
-    } else if (this.state.page === "PAGE_ABOUT") {
-      page = <About />
-    }
-
     return (
       <section className="hero is-fullheight">
         <div className="hero-body">
           <div className="container">
-              {page}
+            <Switch>
+              <Route exact path='/' component={PhD}/>
+              <Route path='/about' component={About}/>
+            </Switch>
           </div>
         </div>
         <div className="hero-foot">
           <nav className="tabs">
             <div className="container">
               <ul>
-                <li className="is-active"><a onClick={this.navigateHome.bind(this)}>Home</a></li>
-                <li><a onClick={this.navigateAbout.bind(this)}>About</a></li>
+                <li><NavLink to="/" exact className="navbar-item" activeClassName="is-active">Home</NavLink></li>
+                <li><NavLink to="/about" exact className="navbar-item" activeClassName="is-active">About</NavLink></li>
               </ul>
             </div>
           </nav>
@@ -436,7 +413,9 @@ class App extends React.Component {
 // ========================================
 
 ReactDOM.render(
-  <App />,
+  <HashRouter>
+    <App />
+  </HashRouter>,
   document.getElementById('root')
 );
 
