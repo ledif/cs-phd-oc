@@ -29,6 +29,18 @@ function salary(years, starting, raise) {
   return arr
 }
 
+function lostString(phd, swe) {
+  const years = phd.length
+  const lostIncome = swe[years-1] - phd[years-1]
+
+  if (lostIncome > 0) {
+    return `${numeral(lostIncome).format('$0,0')} lost`
+  } else {
+    return `${numeral(-lostIncome).format('$0,0')} earned`
+  }
+
+}
+
 class SalaryChart extends React.Component {
   render() {
     let years = []
@@ -117,14 +129,12 @@ class About extends React.Component {
 class DuringDegree extends React.Component {
   render() {
     const years = this.props.numYears
-    const lostIncome = numeral(this.props.swe[years-1] - this.props.phd[years-1]).format('$0,0')
-
     const stipend = numeral(this.props.stipend).format('($0a)');
     const starting = numeral(this.props.startingCompensation).format('($0a)');
 
     return (
       <div>
-          <h2 id="lost-income">{lostIncome} lost</h2>
+          <h2 id="lost-income">{lostString(this.props.phd, this.props.swe)}</h2>
           <p>Nobody goes into a computer science PhD program for the money. But it's often understated just how much you're giving up by pursuing a PhD instead of following the traditional software engineering route.</p>
 
           <hr />
@@ -179,14 +189,11 @@ class DuringDegree extends React.Component {
 
 class AfterDegree extends React.Component {
   render() {
-    const years = this.props.numYears + this.props.numPostDocYears
-    const lostIncome = numeral(this.props.swe[years-1] - this.props.phd[years-1]).format('$0,0')
-
     const starting = numeral(this.props.postDocStartingCompensation).format('($0a)');
 
     return (
       <div>
-          <h2 id="lost-income">{lostIncome} lost</h2>
+          <h2 id="lost-income">{lostString(this.props.phd, this.props.swe)}</h2>
           <p>Even after earning a doctorate, it is unlikely to catch up to the alternate version of you that did not pursue a PhD.</p>
 
           <hr />
@@ -334,9 +341,7 @@ class PhD extends React.Component {
 
     return (
     <div>
-      <section className="hero is-fullheight">
-        <div className="hero-body">
-        <div className="container">
+
           <div className="columns">
 
             <div className="column is-4 box">
@@ -359,22 +364,66 @@ class PhD extends React.Component {
             </div>
 
           </div>
-        </div>
 
-      </div>
-
-
-      </section>
-      <About />
     </div>
     );
+  }
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      page: "PAGE_HOME"
+    };
+  }
+
+  navigateHome() {
+    this.setState((prevState, props) => {
+      return {page: "PAGE_HOME"}
+    });
+  }
+
+  navigateAbout() {
+    this.setState((prevState, props) => {
+      return {page: "PAGE_ABOUT"}
+    });
+  }
+
+  render() {
+    let page;
+    if (this.state.page === "PAGE_HOME") {
+      page = <PhD />
+    } else if (this.state.page === "PAGE_ABOUT") {
+      page = <About />
+    }
+
+    return (
+      <section className="hero is-fullheight">
+        <div className="hero-body">
+          <div className="container">
+              {page}
+          </div>
+        </div>
+        <div className="hero-foot">
+          <nav className="tabs">
+            <div className="container">
+              <ul>
+                <li className="is-active"><a onClick={this.navigateHome.bind(this)}>Home</a></li>
+                <li><a onClick={this.navigateAbout.bind(this)}>About</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </section>
+    )
   }
 }
 
 // ========================================
 
 ReactDOM.render(
-  <PhD />,
+  <App />,
   document.getElementById('root')
 );
 
