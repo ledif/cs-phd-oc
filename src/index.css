@@ -12,7 +12,7 @@
   align-items: center;
 }
 
-#lost-income {
+#lost-income, h1.title {
   font-family: "Century Gothic", Futura, sans-serif;
 }
 

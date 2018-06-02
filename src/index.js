@@ -12,13 +12,6 @@ import EarningsChart from './components/earnings-chart'
 import 'bulma/css/bulma.css'
 import './index.css';
 
-function partialSum(arr) {
-  return arr.reduce((r, a) => {
-    r.push(((r.length && r[r.length - 1]) || 0) + a);
-    return r;
-   }, []
-  );
-}
 
 function salary(years, starting, raise) {
   let arr = Array(years).fill(starting);
@@ -213,16 +206,15 @@ class PhD extends React.Component {
 
     if (this.state.duringDegree) {
       const years = this.state.numYears
-      phd = partialSum(salary(years, this.state.stipend, 2))
-      swe = partialSum(salary(years, this.state.startingCompensation, this.state.raise))
+      phd = salary(years, this.state.stipend, 2)
+      swe = salary(years, this.state.startingCompensation, this.state.raise)
     } else {
-      swe = partialSum(
+      swe = 
         salary(this.state.numYears + this.state.numPostDocYears, this.state.startingCompensation, this.state.raise)
-      )
 
       const duringDegreeSalary = salary(this.state.numYears, this.state.stipend, 2)
       const afterDegreeSalary = salary(this.state.numPostDocYears, this.state.postDocStartingCompensation, this.state.postDocRaise)
-      phd = partialSum(duringDegreeSalary.concat(afterDegreeSalary))
+      phd = duringDegreeSalary.concat(afterDegreeSalary)
     }
 
     const Sliders = this.state.duringDegree ? 
