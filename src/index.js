@@ -23,7 +23,7 @@ class DuringDegree extends React.Component {
     return (
       <div>
           <h2 id="lost-income">{lostString(this.props.phd, this.props.swe)}</h2>
-          <p>People don't enter a computer science PhD program for the money. But it's often understated how much a doctoral student is giving up by pursuing a PhD instead of following the traditional software engineering route.</p>
+          <p>People generally don't enter a computer science PhD program for the money. But it's often understated how much a doctoral student is giving up by pursuing a PhD instead of following the traditional software engineering route.</p>
 
           <hr />
 
@@ -79,7 +79,7 @@ class AfterDegree extends React.Component {
     return (
       <div>
           <h2 id="lost-income">{lostString(this.props.phd, this.props.swe)}</h2>
-          <p>After earning a doctorate, it is possible to fall short of the alternate version of you that did not pursue a PhD.</p>
+          <p>After earning a doctorate, it is possible to never make up for the lost wages incurred during the student's pursuit of a PhD.</p>
           <hr />
 
           <nav className="level">
