@@ -8,33 +8,10 @@ import { HashRouter, Route, Switch, NavLink } from 'react-router-dom'
 
 import About from './components/about'
 import EarningsChart from './components/earnings-chart'
+import { salary, lostString } from './lib/earnings'
 
 import 'bulma/css/bulma.css'
 import './index.css';
-
-
-function salary(years, starting, raise) {
-  let arr = Array(years).fill(starting);
-
-  // Compute income each year based on raise
-  for (let i = 1; i < years; i++) {
-    arr[i] = arr[i-1] * (1 + raise/100);
-  }
-
-  return arr
-}
-
-function lostString(phd, swe) {
-  const years = phd.length
-  const lostIncome = swe[years-1] - phd[years-1]
-
-  if (lostIncome > 0) {
-    return `${numeral(lostIncome).format('$0,0')} lost`
-  } else {
-    return `${numeral(-lostIncome).format('$0,0')} earned`
-  }
-
-}
 
 
 class DuringDegree extends React.Component {

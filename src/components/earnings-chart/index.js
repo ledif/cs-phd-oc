@@ -2,14 +2,7 @@ import React from 'react';
 import {Line} from 'react-chartjs-2';
 import numeral from 'numeral'
 
-
-function partialSum(arr) {
-  return arr.reduce((r, a) => {
-    r.push(((r.length && r[r.length - 1]) || 0) + a);
-    return r;
-   }, []
-  );
-}
+import { partialSum } from '../../lib/earnings'
 
 export default class EarningsChart extends React.Component {
     render() {
