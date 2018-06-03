@@ -1,6 +1,6 @@
-/* body {
-  font: 14px "Century Gothic", Futura, sans-serif;
-} */
+body {
+  font-family: 'Open Sans', Roboto, sans-serif;
+}
 
 .slider-label {
   font-size: 14px;
@@ -13,7 +13,8 @@
 }
 
 #lost-income, h1.title {
-  font-family: "Century Gothic", Futura, sans-serif;
+  font-family: 'BioRhyme', serif;
+  font-weight: 800;
 }
 
 .about p {

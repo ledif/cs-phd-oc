@@ -20,7 +20,7 @@ export default class About extends React.Component {
                 <li>Prepare for a career in academia</li>
               </ul>
               <p>
-                However, maximizing income should be not among the reasons to obtain a doctorate.
+                However, maximizing income should be not among the reasons to obtain a computer science doctorate.
               </p>
               <hr />
               <p>
