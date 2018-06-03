@@ -63,7 +63,7 @@ class DuringDegree extends React.Component {
 
           <div className="columns">
             <div className="column is-4 slider-label"><p>{this.props.raise}% yearly raise </p></div>
-            <div className="column"><Slider min={0} max={5} defaultValue={this.props.raise} step={1} onChange={(value) => this.props.updateRaise(value)} /></div>
+            <div className="column"><Slider min={0} max={6} defaultValue={this.props.raise} step={1} onChange={(value) => this.props.updateRaise(value)} /></div>
           </div>
       </div>
     );
@@ -102,7 +102,7 @@ class AfterDegree extends React.Component {
 
           <div className="columns">
             <div className="column is-4 slider-label"><p>{this.props.postDocRaise}% yearly raise </p></div>
-            <div className="column"><Slider min={0} max={5} defaultValue={this.props.postDocRaise} step={1} onChange={(value) => this.props.updatePostDocRaise(value)} /></div>
+            <div className="column"><Slider min={0} max={6} defaultValue={this.props.postDocRaise} step={1} onChange={(value) => this.props.updatePostDocRaise(value)} /></div>
           </div>
 
       </div>
