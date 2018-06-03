@@ -38,14 +38,14 @@ export default class About extends React.Component {
                 obtain a computer science doctorate.
               </p>
               <hr />
-              <p>
+              <p className="aside">
                 This calculator is not meant to be a hyper-accurate method to
                 account for every aspect of earned income. It is only meant to
                 be used to give a rough idea of what it looks like to pursue a
                 PhD instead of directly heading to the industry after a
                 bachelor's.
               </p>
-              <p>
+              <p className="aside">
                 The code running this page is open source and is located at{" "}
                 <a href="https://github.com/ledif/cs-phd-oc">ledif/cs-phd-oc</a>.
               </p>

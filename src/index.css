@@ -20,3 +20,7 @@ body {
 .about p {
   font-size: 1rem;
 }
+
+.about p.aside {
+  font-size: 0.85rem;
+}
